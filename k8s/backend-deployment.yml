@@ -13,10 +13,12 @@ spec:
       labels:
         app: backend
     spec:
+      imagePullSecrets:
+        - name: ecr-secret
       containers:
         - name: worker-service
-          image: worker-service:latest
-          imagePullPolicy: Never # Ensures it uses the local image, not pulling from a registry
+          image: 057724841053.dkr.ecr.us-east-1.amazonaws.com/worker-service:latest
+          imagePullPolicy: Always # Never - will Ensure it uses the local image and not pulling from a registry
           envFrom:
             - configMapRef:
                 name: backend-config
