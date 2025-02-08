@@ -17,7 +17,7 @@
    ```
 ---
 
-## Using Kubernetes with Local Images
+## Using Kubernetes with Local Images 
 1. **Load Local Docker Images into Minikube**
    ```bash
    minikube image load worker-service:latest
