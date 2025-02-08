@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Processor</title>
+    <script>
+        async function processText() {
+            const text = document.getElementById('textInput').value;
+
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'text': text,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (response.status === 200) {
+                // Display results
+                document.getElementById('wordCount').innerText = `Word Count: ${result.word_count}`;
+                document.getElementById('reversedText').innerText = `Reversed Text: ${result.reversed_text}`;
+            } else {
+                // Display errors
+                document.getElementById('wordCount').innerText = '';
+                document.getElementById('reversedText').innerText = `Error: ${result.error}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Text Processor</h1>
+    <textarea id="textInput" placeholder="Enter your text here..." rows="5" cols="50"></textarea>
+    <br><br>
+    <button onclick="processText()">Send</button>
+    <br><br>
+    <p id="wordCount"></p>
+    <p id="reversedText"></p>
+</body>
+</html>

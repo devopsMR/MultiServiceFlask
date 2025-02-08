@@ -1,0 +1,32 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: web-service:latest
+    ports:
+      - "5001:5001"
+    environment:
+      WEB_HOST: 0.0.0.0
+      WEB_PORT: 5001
+      WEB_WORKER_HOST: backend
+      WEB_WORKER_PORT: 5002
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: worker-service:latest
+    ports:
+      - "5002:5002"
+    environment:
+      WORKER_HOST: 0.0.0.0
+      WORKER_PORT: 5002
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
