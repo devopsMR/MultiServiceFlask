@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: multi-service-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: worker-service
+          image: worker-service:latest
+          imagePullPolicy: Never # Ensures it uses the local image, not pulling from a registry
+          envFrom:
+            - configMapRef:
+                name: backend-config
+          ports:
+            - containerPort: 5002
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

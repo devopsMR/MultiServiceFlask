@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: multi-service-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: web-service
+          image: web-service:latest
+          imagePullPolicy: Never # Ensures it uses the local image, not pulling from a registry
+          envFrom:
+            - configMapRef:
+                name: frontend-config
+          ports:
+            - containerPort: 5001
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
