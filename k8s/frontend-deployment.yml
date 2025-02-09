@@ -17,7 +17,7 @@ spec:
         - name: ecr-secret
       containers:
         - name: web-service
-          image: 057724841053.dkr.ecr.us-east-1.amazonaws.com/web-service:latest
+          image: -AWSID-.dkr.ecr.us-east-1.amazonaws.com/web-service:latest
           imagePullPolicy: Always # Never - will Ensure it uses the local image and not pulling from a registry
           envFrom:
             - configMapRef:
