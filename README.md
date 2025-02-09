@@ -1,5 +1,35 @@
 # Running the App
 
+## Using Kubernetes with ECR Images
+1. **Authenticate with ECR**
+   ```bash
+   aws ecr get-login-password --region <your-region> | docker login --username AWS --password-stdin <your-ecr-repository-url>
+   ```
+2. **Tag and Push Images to ECR**
+   ```bash
+   docker tag web-service:latest <your-ecr-repository-url>/<IMAGE>:<TAG>
+   docker push <your-ecr-repository-url>/<IMAGE>:<TAG>
+   ```
+3. **Create Kubernetes Secret for ECR**
+   ```bash
+   kubectl create secret docker-registry ecr-secret \
+       --docker-server=<your-ecr-repository-url> \
+       --docker-username=AWS \
+       --docker-password=$(aws ecr get-login-password --region <your-region>) \
+       -n <name_space>
+   ```
+4. **Apply Kubernetes Configuration Files**
+   ```bash
+   kubectl apply -f .
+   ```
+5. **Access the Application**  
+   Retrieve the service URL:
+   ```bash
+   minikube service frontend-service -n <name_space>
+   ```
+   
+---
+   
 ## Using Docker Compose
 1. **Clone the repository**  
    Download this repository to your local machine.
@@ -20,8 +50,7 @@
 ## Using Kubernetes with Local Images 
 1. **Load Local Docker Images into Minikube**
    ```bash
-   minikube image load worker-service:latest
-   minikube image load web-service:latest
+   minikube image load <IMAGE>:<TAG>
    ```
 2. **Apply Kubernetes Configuration Files**
    ```bash
@@ -30,39 +59,5 @@
 3. **Access the Application**  
    Use the following command to retrieve the service URL:
    ```bash
-   minikube service frontend-service -n multi-service-app
-   ```
-
----
-
-## Using Kubernetes with ECR Images
-
-1. **Authenticate with ECR**
-   ```bash
-   aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <your-ecr-repository-url>
-   ```
-2. **Tag and Push Images to ECR**
-   ```bash
-   docker tag web-service:latest <your-ecr-repository-url>/web-service:latest
-   docker tag worker-service:latest <your-ecr-repository-url>/worker-service:latest
-
-   docker push <your-ecr-repository-url>/web-service:latest
-   docker push <your-ecr-repository-url>/worker-service:latest
-   ```
-3. **Create Kubernetes Secret for ECR**
-   ```bash
-   kubectl create secret docker-registry ecr-secret \
-       --docker-server=<your-ecr-repository-url> \
-       --docker-username=AWS \
-       --docker-password=$(aws ecr get-login-password --region us-east-1) \
-       -n multi-service-app
-   ```
-4. **Apply Kubernetes Configuration Files**
-   ```bash
-   kubectl apply -f .
-   ```
-5. **Access the Application**  
-   Retrieve the service URL:
-   ```bash
-   minikube service frontend-service -n multi-service-app
+   minikube service <service_name> -n <name_space>
    ```
