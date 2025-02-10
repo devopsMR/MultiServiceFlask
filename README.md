@@ -18,11 +18,13 @@
        --docker-password=$(aws ecr get-login-password --region <your-region>) \
        -n <name_space>
    ```
-4. **Apply Kubernetes Configuration Files**
+4. **Replace image name placeholder  "-AWSID-", in backend-deployment.yml & frontend-deployment.yml files**
+
+5. **Apply Kubernetes Configuration Files**
    ```bash
    kubectl apply -f .
    ```
-5. **Access the Application**  
+6. **Access the Application**  
    Retrieve the service URL:
    ```bash
    minikube service frontend-service -n <name_space>
