@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: frontend-health-check
+  namespace: flask-app
+spec:
+  schedule: "*/5 * * * *" # Run every 5 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: health-check
+            image: curlimages/curl:7.88.1
+            args:
+            - "sh"
+            - "-c"
+            - |
+              # Use the Kubernetes service name and correct port for the health check
+              HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://frontend-service:5001/health)
+
+              # Log the result with a timestamp
+              TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+              if [ "$HTTP_STATUS" -eq 200 ]; then
+                echo "[$TIMESTAMP] Frontend health check succeeded with status code $HTTP_STATUS."
+              else
+                echo "[$TIMESTAMP] Frontend health check failed with status code $HTTP_STATUS."
+                exit 1
+              fi
+            resources:
+              requests:
+                cpu: "100m"
+                memory: "128Mi"
+              limits:
+                cpu: "200m"
+                memory: "256Mi"
+          restartPolicy: OnFailure

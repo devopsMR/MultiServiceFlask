@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-configmap
+  namespace: flask-app
+data:
+  mysql-database: reverse_database
+  mysql-user: sql_user

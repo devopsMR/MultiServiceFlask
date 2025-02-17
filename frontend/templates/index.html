@@ -21,13 +21,24 @@
             const result = await response.json();
 
             if (response.status === 200) {
-                // Display results
+                // Display word count and reversed text
                 document.getElementById('wordCount').innerText = `Word Count: ${result.word_count}`;
                 document.getElementById('reversedText').innerText = `Reversed Text: ${result.reversed_text}`;
+
+                // Display the source information with appropriate coloring
+                const sourceElement = document.getElementById('textSource');
+                if (result.source === "database") {
+                    sourceElement.style.color = "green";
+                    sourceElement.innerText = `Source: ${result.source}`;
+                } else if (result.source === "calculated") {
+                    sourceElement.style.color = "purple";
+                    sourceElement.innerText = `Source: ${result.source}`;
+                }
             } else {
                 // Display errors
                 document.getElementById('wordCount').innerText = '';
                 document.getElementById('reversedText').innerText = `Error: ${result.error}`;
+                document.getElementById('textSource').innerText = '';
             }
         }
     </script>
@@ -40,5 +51,6 @@
     <br><br>
     <p id="wordCount"></p>
     <p id="reversedText"></p>
+    <p id="textSource"></p> <!-- Element for displaying source information -->
 </body>
 </html>

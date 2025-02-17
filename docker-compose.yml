@@ -7,10 +7,10 @@ services:
     ports:
       - "5001:5001"
     environment:
-      WEB_HOST: 0.0.0.0
-      WEB_PORT: 5001
-      WEB_WORKER_HOST: backend
-      WEB_WORKER_PORT: 5002
+      WEB_HOST: ${WEB_HOST}
+      WEB_PORT: ${WEB_PORT}
+      WEB_WORKER_HOST: ${WEB_WORKER_HOST}
+      WEB_WORKER_PORT: ${WEB_WORKER_PORT}
     networks:
       - app-network
 
@@ -22,11 +22,43 @@ services:
     ports:
       - "5002:5002"
     environment:
-      WORKER_HOST: 0.0.0.0
-      WORKER_PORT: 5002
+      WORKER_HOST: ${WORKER_HOST}
+      WORKER_PORT: ${WORKER_PORT}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
       - app-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-ppassword" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  mysql-data:
