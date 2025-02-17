@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  namespace: flask-app
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: frontend-ingress
+  rules:
+    - host: flask-app.my-domain.com  # Replace with your custom domain or external IP for testing
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service  # Reference your frontend-service
+                port:
+                  number: 5001          # Port defined in your frontend-service

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: quota
-  namespace: multi-service-app
+  namespace: flask-app
 spec:
   hard:
     pods: "10"

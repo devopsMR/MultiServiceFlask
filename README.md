@@ -63,3 +63,21 @@
    ```bash
    minikube service <service_name> -n <name_space>
    ```
+
+# Using Ingress
+1. **update host file**
+   ```bash
+   sudo nano /etc/hosts 
+   ```
+2. **creates external access to Ingress resources by assigning a local IP**
+   ```bash
+   minikube tunnel
+   ```
+3. **Access via the Browser**
+   ```bash
+   http://flask-app.my-domain.com
+   ```
+
+## Ingress Explanation Diagram
+
+![Ingress Explanation](pic/ingress-explain.jpeg)

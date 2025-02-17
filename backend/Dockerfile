@@ -6,7 +6,7 @@ COPY requirements.txt /app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY worker-service.py /app/
+COPY . /app/
 
 ENV WORKER_HOST="0.0.0.0"
 ENV WORKER_PORT=5002

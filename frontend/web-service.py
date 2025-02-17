@@ -42,6 +42,9 @@ def submit_text():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@web_app.route('/health', methods=['GET'])
+def health_check():
+    return "OK", 200
 
 if __name__ == '__main__':
     WEB_HOST = os.getenv('WEB_HOST')
