@@ -1,0 +1,84 @@
+create ec2, add ssh key, edit inbound rules (HTTP, anywhere )
+    sudo apt update
+    sudo apt install nginx -y
+    sudo systemctl start nginx
+    sudo systemctl enable nginx
+    sudo systemctl status nginx
+    sudo nano /var/www/html/index.nginx-debian.html
+
+
+buy a domain on AWS:
+1. Go to **Route 53** in the AWS Management Console.
+2. Select **Registered Domains**, then click **Register Domain**.
+3. Search for your domain name.
+4. Choose an available domain, provide contact details, and proceed with payment.
+5. Complete the domain registration process.
+
+fixed IP address - assign an Elastic IP to your EC2 instance:
+1. Go to the **EC2 Dashboard** in the AWS Management Console.
+2. In the left menu, select **Elastic IPs** under "Network & Security".
+3. Click **Allocate Elastic IP Address** to allocate a new IP.
+4. Select the newly allocated IP, and click **Actions > Associate Elastic IP Address**.
+5. Choose your EC2 instance and associate it
+
+connect a domain to an EC2 Elastic
+1. Open your domain's **hosted zone** in Route 53.
+2. Create a new **A Record**.
+    - Name: Enter your domain name without "www" (e.g., `example.com`).
+    - Value: Enter your Elastic IP.
+    - Save the record.
+
+ load balancing:
+create a **Target Group** in AWS and associate it with EC2 instances
+### Steps to Create a Target Group
+1. **Navigate to the EC2 Dashboard**:
+    - Go to the **EC2 Dashboard**.
+2. **Open the Target Groups Page**:
+3. **Create a New Target Group**:
+    - Click on the **Create target group** button.
+    - **Choose the Target Type**:
+        - Select **Instances**
+    - **Define Group Details**:
+        - **Target group name**: Enter a descriptive name (e.g., `nginx-target-group`).
+        - **Protocol**: Select **HTTP**.
+        - **Port**: Enter `80`.
+        - **Health Check Protocol**: Choose **HTTP**.
+        - **Health Check Path**: Enter the specific path on your Nginx server, e.g., `/` (default root path).
+4. **click next and Register Targets (Add EC2 Instances)**:
+    - After creating the target group, you'll need to register your EC2 instances:
+        - Select the **instances** you want to add to the target group.
+        - Specify the **port** (80 in this case) for each instance.
+5. - Click **Include as pending below**.
+6. **Finalize and Create**:
+    - Click **Create target group** to finish.
+
+
+- Once your **target group** is set up, you can assign it to a **Load Balancer**
+To create and attach a **Load Balancer** to your target group (with your EC2 instances running on port 80)
+### **Steps to Create a Load Balancer**
+1. **Navigate to the Load Balancer Section**:
+2. **Create a New Load Balancer**:
+    - Click the **Create Load Balancer** button.
+    - Choose **Application Load Balancer (ALB)** (best for HTTP/HTTPS traffic).
+3. **Configure the Load Balancer**:
+    - **Name**: Enter a descriptive name for your Load Balancer (e.g., `my-nginx-alb`).
+    - **Scheme**: Choose one:
+        - **Internet-facing** (if users access it from the internet).
+    - **IP Address Type**: Stick to **IPv4** unless you need dual-stack (IPv6 and IPv4).
+    - **Listeners**: By default, a listener on port **80 (HTTP)** will be created. If you also want SSL, you can add port **443 (HTTPS)** later.
+    - **Availability Zones**:
+        - Select the **VPC** where your EC2 instances are located.
+        - Choose the **subnets** in the availability zones where your EC2 instances are running.
+4. **Configure Security Groups**:
+    - Create or select a security group that allows HTTP (port **80**) traffic (and HTTPS, if applicable, on port **443** later).
+    - Ensure the security group permits access from the internet (for public-facing ALBs).
+5. **Configure Routing**:
+    - Select the target group created earlier:
+        - Under **Default Action**, choose **Forward to** and select your **target group** (e.g., `nginx-target-group`).
+6. **Review and Create**:
+    - Review your configuration details.
+    - Click **Create Load Balancer**.
+### **Testing and Verifying Your Load Balancer**
+- Once the load balancer is active:
+    1. Locate its **DNS name** in the **Description** tab of the Load Balancer.
+    2. Use the DNS name in your browser 
