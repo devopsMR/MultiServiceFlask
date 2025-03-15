@@ -81,4 +81,10 @@ To create and attach a **Load Balancer** to your target group (with your EC2 ins
 ### **Testing and Verifying Your Load Balancer**
 - Once the load balancer is active:
     1. Locate its **DNS name** in the **Description** tab of the Load Balancer.
-    2. Use the DNS name in your browser 
+    2. Use the DNS name in your browser
+
+
+ IAM
+ User
+ group
+ Policies
